@@ -10,10 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.util.WebUtils;
 
 import javax.crypto.SecretKey;
@@ -33,44 +30,38 @@ public class JwtUtils {
     @Value("${spring.ecom.app.jwtCookieName}")
     private String jwtCookie;
 
-//    public String getJwtFromHeader(HttpServletRequest request) {
-//        String bearerToken = request.getHeader("Authorization");
-//        logger.debug("Authorization Header: {}", bearerToken);
-//        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-//            return bearerToken.substring(7); // Remove Bearer prefix
-//        }
-//        return null;
-//    }
-
-    public String getJwtFromCookies(HttpServletRequest request){
+    public String getJwtFromCookies(HttpServletRequest request) {
         Cookie cookie = WebUtils.getCookie(request, jwtCookie);
-        if(cookie!=null){
+        if (cookie != null) {
             return cookie.getValue();
-        }
-        else{
+        } else {
             return null;
         }
     }
 
-    public String getJwtFromHeader(HttpServletRequest request){
+    public String getJwtFromHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if(bearerToken != null && bearerToken.startsWith("Bearer ")){
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
         return null;
     }
 
-    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal){
+    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
         String jwt = generateTokenFromUsername(userPrincipal.getUsername());
         ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt)
-                .path("/api").maxAge(24*60*60)
-                .httpOnly(false).build();
+                .path("/api")
+                .maxAge(24 * 60 * 60)
+                .httpOnly(false)
+                .secure(false)
+                .build();
         return cookie;
     }
 
-    public ResponseCookie getCleanJwtCookie(){
+    public ResponseCookie getCleanJwtCookie() {
         ResponseCookie cookie = ResponseCookie.from(jwtCookie, null)
-                .path("/api").build();
+                .path("/api")
+                .build();
         return cookie;
     }
 
@@ -85,7 +76,7 @@ public class JwtUtils {
 
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parser()
-                        .verifyWith((SecretKey) key())
+                .verifyWith((SecretKey) key())
                 .build().parseSignedClaims(token)
                 .getPayload().getSubject();
     }
@@ -96,7 +87,6 @@ public class JwtUtils {
 
     public boolean validateJwtToken(String authToken) {
         try {
-            System.out.println("Validate");
             Jwts.parser().verifyWith((SecretKey) key()).build().parseSignedClaims(authToken);
             return true;
         } catch (MalformedJwtException e) {
