@@ -1,7 +1,6 @@
-import ProductCard from "./components/ProductViewModal";
-import Products from "./components/Products";
+import { useState } from "react";
+import Products from "./components/products/Products";
 export default function App() {
-  return (
-    <Products/>
-  );
+  const [count, setCount] = useState(0);
+  return <Products />;
 }

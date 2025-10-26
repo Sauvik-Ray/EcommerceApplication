@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import ProductViewModal from "./ProductViewModal";
+import truncateText from "../../utils/truncateText";
 
 const ProductCard = ({
   id: productId,
@@ -16,6 +17,9 @@ const ProductCard = ({
   const btnLoader = false;
   const [selectViewProduct, setSelectedViewProduct] = useState("");
   const isAvailable = quantity && Number(quantity) > 0;
+
+  // console.log("Product Image URL:", image);
+
   const handleProductView = (product) => {
     setSelectedViewProduct(product);
     setOpenProductViewModal(true);
@@ -35,7 +39,7 @@ const ProductCard = ({
             specialPrice,
           });
         }}
-        className="w-full overflow-hidden aspect-[[3/2]"
+        className="w-full overflow-hidden aspect-3/2"
       >
         <img
           src={image}
@@ -59,10 +63,12 @@ const ProductCard = ({
           }}
           className="text-lg font-semibold mb-2 cursor-pointer"
         >
-          {productName}
+          {truncateText(productName)}
         </h2>
         <div className="min-h-20 max-h-20">
-          <p className="text-gray-600 text-sm">{description}</p>
+          <p className="text-gray-600 text-sm">
+            {truncateText(description, 50)}
+          </p>
         </div>
 
         <div className="flex items-center justify-between">
