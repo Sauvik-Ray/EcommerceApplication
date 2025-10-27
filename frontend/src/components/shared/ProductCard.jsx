@@ -2,9 +2,12 @@ import { useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import ProductViewModal from "./ProductViewModal";
 import truncateText from "../../utils/truncateText";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../store/actions";
+import toast from "react-hot-toast";
 
 const ProductCard = ({
-  id: productId,
+  productId,
   productName,
   image,
   description,
@@ -16,10 +19,9 @@ const ProductCard = ({
 }) => {
   const [openProductViewModal, setOpenProductViewModal] = useState(false);
   const btnLoader = false;
-  const [selectViewProduct, setSelectedViewProduct] = useState("");
+  const [selectedViewProduct, setSelectedViewProduct] = useState("");
   const isAvailable = quantity && Number(quantity) > 0;
-
-  // console.log("Product Image URL:", image);
+  const dispatch = useDispatch();
 
   const handleProductView = (product) => {
     if (!about) {
@@ -27,6 +29,11 @@ const ProductCard = ({
       setOpenProductViewModal(true);
     }
   };
+
+  const addToCartHandler = (cartItems) => {
+    dispatch(addToCart(cartItems, 1, toast));
+  };
+
   return (
     <div className="border rounded-lg shadow-xl overflow-hidden transition-shadow duration-300">
       <div
@@ -45,10 +52,10 @@ const ProductCard = ({
         className="w-full overflow-hidden aspect-3/2"
       >
         <img
+          className="w-full h-full cursor-pointer transition-transform duration-300 transform hover:scale-105"
           src={image}
           alt={productName}
-          className="w-full h-full cursor-pointer transition-transform duration-300 transform hover:scale-105"
-        />
+        ></img>
       </div>
       <div className="p-4">
         <h2
@@ -66,11 +73,12 @@ const ProductCard = ({
           }}
           className="text-lg font-semibold mb-2 cursor-pointer"
         >
-          {truncateText(productName)}
+          {truncateText(productName, 50)}
         </h2>
+
         <div className="min-h-20 max-h-20">
           <p className="text-gray-600 text-sm">
-            {truncateText(description, 50)}
+            {truncateText(description, 80)}
           </p>
         </div>
 
@@ -118,7 +126,7 @@ const ProductCard = ({
       <ProductViewModal
         open={openProductViewModal}
         setOpen={setOpenProductViewModal}
-        product={selectViewProduct}
+        product={selectedViewProduct}
         isAvailable={isAvailable}
       />
     </div>
