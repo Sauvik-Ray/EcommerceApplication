@@ -5,11 +5,14 @@ import { Link, useLocation } from "react-router-dom";
 import { RxCross2 } from "react-icons/rx";
 import { IoIosMenu } from "react-icons/io";
 import { useSelector } from "react-redux";
+import UserMenu from "../UserMenu"; // ✅ import added
 
 const NavBar = () => {
   const path = useLocation().pathname;
   const [navbarOpen, setNavbarOpen] = useState(false);
   const { cart } = useSelector((state) => state.carts);
+  const { user } = useSelector((state) => state.auth);
+
   return (
     <div className="h-[70px] text-white z-50 flex items-center sticky top-0 bg-[linear-gradient(to_right,#1e3c72,#2a5298)]">
       <div className="lg:px-14 sm:px-8 px-4 w-full flex justify-between">
@@ -90,19 +93,26 @@ const NavBar = () => {
             </Link>
           </li>
 
-          <li className="font-medium transition-all duration-150">
-            <Link
-              className="flex items-center space-x-2 px-4 py-1.5 
+          {/* ✅ Use UserMenu if logged in, else Login button */}
+          {user && user.id ? (
+            <li className="font-medium transition-all duration-150">
+              <UserMenu />
+            </li>
+          ) : (
+            <li className="font-medium transition-all duration-150">
+              <Link
+                className="flex items-center space-x-2 px-4 py-1.5 
                             bg-linear-to-r from-purple-600 to-red-500 
                             text-white font-semibold rounded-md shadow-lg 
                             hover:from-purple-500 hover:to-red-400 transition 
                             duration-300 ease-in-out transform "
-              to="/login"
-            >
-              <FaSignInAlt />
-              <span>Login</span>
-            </Link>
-          </li>
+                to="/login"
+              >
+                <FaSignInAlt />
+                <span>Login</span>
+              </Link>
+            </li>
+          )}
         </ul>
 
         <button
