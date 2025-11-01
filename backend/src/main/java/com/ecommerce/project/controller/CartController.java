@@ -3,6 +3,7 @@ package com.ecommerce.project.controller;
 import com.ecommerce.project.Repository.CartRepository;
 import com.ecommerce.project.model.Cart;
 import com.ecommerce.project.payload.CartDTO;
+import com.ecommerce.project.payload.CartItemDTO;
 import com.ecommerce.project.service.CartService;
 import com.ecommerce.project.util.AuthUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +30,12 @@ public class CartController {
     private AuthUtil authUtil;
     @Autowired
     private CartRepository cartRepository;
+
+    @PostMapping("/cart/create")
+    public ResponseEntity<String>createOrUpdateCart(@RequestBody List<CartItemDTO> cartItems){
+        String response = cartService.createOrUpdateCartWithItems(cartItems);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
 
     @Operation(summary = "Add product to cart", description = "Add a product with specified quantity to user's cart")
     @ApiResponses(value = {
