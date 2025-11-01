@@ -5,6 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserAddresses } from "../../store/actions";
 import { Button } from "@headlessui/react";
 import toast from "react-hot-toast";
+import ErrorPage from "../shared/ErrorPage";
+import PaymentMethod from "./PaymentMethod";
+import OrderSummary from "./OrderSummary";
+import StripePayment from "./StripePayment";
+import PaypalPayment from "./PaypalPayment";
 
 const CheckOut = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -13,12 +18,13 @@ const CheckOut = () => {
   const steps = ["Address", "Payment Method", "Order Summary", "Payment"];
 
   const { isLoading, errorMessage } = useSelector((state) => state.errors);
+  const { cart, totalPrice } = useSelector((state) => state.carts);
   const { address, selectedUserCheckoutAddress } = useSelector(
     (state) => state.auth
   );
 
   // (optional) if you add payment logic later
-  const paymentMethod = null;
+  const { paymentMethod } = useSelector((state) => state.payment);
 
   const handleBack = () => {
     setActiveStep((prevStep) => prevStep - 1);
@@ -56,6 +62,20 @@ const CheckOut = () => {
       {/* Step Content */}
       <div className="mt-5">
         {activeStep === 0 && <AddressInfo address={address} />}
+        {activeStep === 1 && <PaymentMethod />}
+        {activeStep === 2 && (
+          <OrderSummary
+            totalPrice={totalPrice}
+            cart={cart}
+            address={selectedUserCheckoutAddress}
+            paymentMethod={paymentMethod}
+          />
+        )}
+        {activeStep === 3 && (
+          <>
+            {paymentMethod === "Stripe" ? <StripePayment /> : <PaypalPayment />}
+          </>
+        )}
         {/* You can later add conditional renders for other steps */}
       </div>
 
@@ -102,6 +122,8 @@ const CheckOut = () => {
           </button>
         )}
       </div>
+
+      {errorMessage && <ErrorPage message={errorMessage} />}
     </div>
   );
 };
