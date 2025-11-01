@@ -8,8 +8,8 @@ import { formatPrice } from "../../utils/formatPrice";
 const Cart = () => {
   const dispatch = useDispatch();
   const { cart } = useSelector((state) => state.carts);
-  const newCart = { ...cart };
 
+  const newCart = { ...cart };
   newCart.totalPrice = cart?.reduce(
     (acc, cur) => acc + Number(cur?.specialPrice) * Number(cur?.quantity),
     0
@@ -31,25 +31,23 @@ const Cart = () => {
         <div className="md:col-span-2 justify-self-start text-lg text-slate-800 lg:ps-4">
           Product
         </div>
-
         <div className="justify-self-center text-lg text-slate-800">Price</div>
-
         <div className="justify-self-center text-lg text-slate-800">
           Quantity
         </div>
-
         <div className="justify-self-center text-lg text-slate-800">Total</div>
       </div>
 
       <div>
-        {cart &&
-          cart.length > 0 &&
-          cart.map((item, i) => <ItemContent key={i} {...item} />)}
+        {cart.map((item, i) => (
+          <ItemContent key={i} {...item} />
+        ))}
       </div>
 
       <div className="border-t-[1.5px] border-slate-200 py-4 flex sm:flex-row sm:px-0 px-2 flex-col sm:justify-between gap-4">
         <div></div>
         <div className="flex text-sm gap-1 flex-col">
+          {/* Subtotal */}
           <div className="flex justify-between w-full md:text-lg text-sm font-semibold">
             <span>Subtotal</span>
             <span>{formatPrice(newCart?.totalPrice)}</span>
@@ -62,7 +60,10 @@ const Cart = () => {
           <Link className="w-full flex justify-end" to="/checkout">
             <button
               onClick={() => {}}
-              className="font-semibold w-[300px] py-2 px-4 rounded-xs bg-custom-blue text-white flex items-center justify-center gap-2 hover:text-gray-300 transition duration-500"
+              className="font-semibold w-full sm:w-[260px] md:w-[300px] py-2 px-4 rounded-md 
+    bg-blue-600 text-white flex items-center justify-center gap-2 
+    hover:bg-blue-700 active:bg-blue-800 
+    transition-all duration-300 shadow-md hover:shadow-lg"
             >
               <MdShoppingCart size={20} />
               Checkout
@@ -70,7 +71,7 @@ const Cart = () => {
           </Link>
 
           <Link
-            className="flex gap-2 items-center mt-2 text-slate-500"
+            className="flex gap-2 items-center mt-3 text-slate-600 hover:text-slate-800 transition"
             to="/products"
           >
             <MdArrowBack />

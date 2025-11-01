@@ -10,6 +10,7 @@ import Cart from "./components/cart/Cart";
 import LogIn from "./components/auth/LogIn";
 import PrivateRoute from "./components/PrivateRoute";
 import Register from "./components/auth/Register";
+import Checkout from "./components/checkout/Checkout";
 
 export default function App() {
   const [count, setCount] = useState(0);
@@ -24,6 +25,9 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<Cart />} />
 
+          <Route path="/" element={<PrivateRoute />}>
+            <Route path="/checkout" element={<Checkout />} />
+          </Route>
           <Route path="/" element={<PrivateRoute publicPage />}>
             <Route path="/login" element={<LogIn />} />
             <Route path="/register" element={<Register />} />
