@@ -2,7 +2,10 @@ import { Step, StepLabel, Stepper } from "@mui/material";
 import { useEffect, useState } from "react";
 import AddressInfo from "./AddressInfo";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserAddresses } from "../../store/actions";
+import {
+  getUserAddresses,
+  createStripePaymentSecret,
+} from "../../store/actions";
 import { Button } from "@headlessui/react";
 import toast from "react-hot-toast";
 import ErrorPage from "../shared/ErrorPage";
@@ -39,6 +42,14 @@ const CheckOut = () => {
     if (activeStep === 1 && (!selectedUserCheckoutAddress || !paymentMethod)) {
       toast.error("Please select payment method before proceeding.");
       return;
+    }
+
+    if (activeStep === 2 && paymentMethod === "Stripe") {
+      const sendData = {
+        amount: totalPrice,
+        currency: "usd",
+      };
+      dispatch(createStripePaymentSecret(sendData));
     }
 
     setActiveStep((prevStep) => prevStep + 1);

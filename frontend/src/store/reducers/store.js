@@ -13,8 +13,20 @@ const cartItems = localStorage.getItem("cartItems")
   ? JSON.parse(localStorage.getItem("cartItems"))
   : [];
 
+const clientSecret = localStorage.getItem("client-secret")
+  ? JSON.parse(localStorage.getItem("client-secret"))
+  : null;
+
+const selectedUserCheckoutAddress = localStorage.getItem("cartItems")
+  ? JSON.parse(localStorage.getItem("CHECKOUT_ADDRESS"))
+  : [];
+
 const initialState = {
-  auth: { user: user },
+  auth: {
+    user: user,
+    clientSecret: clientSecret,
+    selectedUserCheckoutAddress,
+  },
   carts: { cart: cartItems },
 };
 
@@ -24,7 +36,7 @@ export const store = configureStore({
     errors: errorRedcer,
     carts: cartReducer,
     auth: authReducer,
-    payment : paymentMethodReducer,
+    payment: paymentMethodReducer,
   },
   preloadedState: initialState,
 });

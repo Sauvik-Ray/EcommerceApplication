@@ -30,6 +30,7 @@ const AddressList = ({
   };
 
   const handleAddressSelection = (addresses) => {
+    localStorage.setItem("CHECKOUT_ADDRESS", JSON.stringify(addresses));
     dispatch(selectUserCheckoutAddress(addresses));
   };
 
