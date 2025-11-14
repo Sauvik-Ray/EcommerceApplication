@@ -307,7 +307,6 @@ export const categoryTableColumns = (handleEdit, handleDelete) => [
   },
 ];
 
-//table column for seller in admin panel
 export const sellerTableColumns = [
   {
     disableColumnMenu: true,

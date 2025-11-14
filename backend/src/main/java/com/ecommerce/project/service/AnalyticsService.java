@@ -4,5 +4,5 @@ import com.ecommerce.project.payload.AnalyticsResponse;
 
 public interface AnalyticsService {
 
-    public AnalyticsResponse getAnalytics();
+    AnalyticsResponse getAnalytics();
 }
